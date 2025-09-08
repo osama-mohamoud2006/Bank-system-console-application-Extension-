@@ -914,7 +914,9 @@ void main_admins_menu() {
 		<< setw(5) << "\tWelcome to admins system! "
 		<< "\033[0m";  // reset 
 	cout << "\n_____________________________________________________\n\n";
-	cout << setw(5) << "please enter the number of the option you want: \n" << endl;
+	cout << "\033[33m" << setw(5)
+		<< "Please enter the number of the option you want: \n"
+		<< "\033[0m" ;
 
 	cout << setw(4) << "\t[1] list admins." << endl;
 	cout << setw(4) << "\t[2] add new admin." << endl;
