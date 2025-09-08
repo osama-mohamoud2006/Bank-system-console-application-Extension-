@@ -20,16 +20,29 @@ struct stdata
 	bool mark_for_delete = false;
 
 };
-enum enOption { none = 0, showClientList = 1, addNewClient = 2, deleteClient = 3, updateClient = 4, searchClient = 5, Transactions = 6, Exit = 7 };
+
+struct stadmins {
+	string username = "";
+	string pin = "";
+	//int per = 0;
+};
+
+enum enOption { none = 0, showClientList = 1, addNewClient = 2, deleteClient = 3, updateClient = 4, searchClient = 5, Transactions = 6, logout = 7 };
+
+void login();
+
 const string path = "local db.text";
+const string AdminsPer = "Admins.text";
 const string delmi = "#//#";
-void  back_to_menu() {
+
+void  back_to_menu(string TextAppearWhenYouBack = "press any key to back to main menu !") {
 	cout << "\033[1;31m";
-	cout << "\npress any key to back to main menu ! " << endl;
+	cout << "\n "<< TextAppearWhenYouBack << endl;
 	cout << "\033[0m";
 	system("pause>0");
 
 }
+
 void print_menu_option(string option_name) {
 	cout << "\n_________________________________________________\n\n\n";
 	cout << "\t" << option_name << "\n";
@@ -95,6 +108,19 @@ stdata convert_line_into_record(string new_client_line) {
 
 }
 
+stadmins convert_line_into_recordAdmins(string new_admin_line) {
+	vector<string> dataSplited;
+	stadmins data;
+	dataSplited = split_string(new_admin_line, delmi);
+
+	data.username = dataSplited[0];
+	data.pin = dataSplited[1];
+	//data.per = dataSplited[2]; // --> for permissions 
+
+
+	return data;
+}
+
 //read file then push all data into vector of struct 
 vector<stdata> Vector_have_all_data(string path) {
 
@@ -124,6 +150,36 @@ vector<stdata> Vector_have_all_data(string path) {
 	}
 	return v_with_all_data;
 }
+
+vector<stadmins> Vector_have_all_admins(string path= "Admins.text") {
+
+	vector<stadmins> v_with_all_data;
+	fstream write;
+	write.open(path, ios::in); //read mode 
+
+	if (write.is_open()) {
+
+		string ld = ""; // line of data 
+		stadmins admins;
+		while (getline(write, ld)) {
+			if (ld != "")
+			{
+
+				admins = convert_line_into_recordAdmins(ld); // fill empty struct with data after convert line into raw data
+				v_with_all_data.push_back(admins); // push the data in vector 
+
+			}
+
+		}
+	}
+	else {
+		cout << "file couldn't open!" << endl;
+		cout << "\a";
+		screen_color(red);
+	}
+	return v_with_all_data;
+}
+
 
 //print header for show client list (FOR "SHOW ALL CLIENT (1) ) 
 void print_header(int num = 1, bool menu2 = false) {
@@ -712,17 +768,19 @@ void main_menu() {
 	cout << setw(4) << "\t[4] update clients info." << endl;
 	cout << setw(4) << "\t[5] find client." << endl;
 	cout << setw(4) << "\t[6] Transactions." << endl;
-	cout << setw(4) << "\t[7] exit." << endl;
+	cout << setw(4) << "\t[7] logout." << endl;
 	cout << "\n_____________________________________________________\n\n";
 	cout << "Please enter the option you want: ";
 
 
 }
 void exit_screen() {
-	cout << "\t________________________________________________________________________" << endl;
+	/*cout << "\t________________________________________________________________________" << endl;
 	cout << "\t\t\t\t Say Good bye to me , mewo :)" << endl;
 	cout << "\t________________________________________________________________________" << endl;
-	system("pause");
+	system("pause");*/
+
+	login();
 }
 // show the menu of transcations//////////////////////////////
 void transcationsScreenMenu() {
@@ -786,6 +844,51 @@ void StartTransactions() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
+
+enum enadminsStuff {
+	listAdmins = 1, AddNewAdmin = 2, DeleteAdmin = 3 , UpdateAdmin=4 , FindAdmin=5,
+};
+
+void main_admins_menu() {
+	system("cls");
+	cout << setw(5) << "\tWelcome to admins system! ";
+	cout << "\n_____________________________________________________\n\n";
+	cout << setw(5) << "please enter the number of the option you want: \n" << endl;
+
+	cout << setw(4) << "\t[1] list admins." << endl;
+	cout << setw(4) << "\t[2] add new admin." << endl;
+	cout << setw(4) << "\t[3] delete admin." << endl;
+	cout << setw(4) << "\t[4] update admin info." << endl;
+	cout << setw(4) << "\t[5] find admin." << endl;
+	cout << setw(4) << "\t[6] main menu." << endl;
+	cout << "\n_____________________________________________________\n\n";
+	cout << "Please enter the option you want: ";
+
+
+}
+
+
+void StartMenuScreen() {
+
+	system("cls");
+	screen_color(black);
+	enOption choice = none; // intial 
+
+	do {
+
+		main_menu(); // show main menu 
+
+		// select option according to user then run selected job
+		choice = select_option();
+		do_job_according_to_number(choice);
+
+
+
+	} while (choice != enOption::logout);
+}
+
+
+
 void do_job_according_to_number(enOption option) {
 	system("cls");
 
@@ -823,7 +926,7 @@ void do_job_according_to_number(enOption option) {
 		//back_to_menu(); // to back to main menu again 
 		break;
 
-	case enOption::Exit: // option[7]
+	case enOption::logout: // option[7]
 		exit_screen();
 		break;
 
@@ -849,15 +952,57 @@ void start()
 
 
 
-	} while (choice != enOption::Exit);
+	} while (choice != enOption::logout);
 
 
 }
+
+// check if username exists or not 
+
+bool CheckUserameAndPassword(vector<stadmins> VerctorHaveAdminsList, string username,string pin) {
+	for (stadmins& admins : VerctorHaveAdminsList)
+	{
+		if (admins.pin == pin && (admins.username == username) ) return true;
+	}
+	return false;
+}
+
+void login() {
+
+	system("cls");
+	screen_color(black);
+	vector<stadmins> admins = Vector_have_all_admins("Admins.text"); // vector have admins list , load admins list into vector
+
+	print_menu_option("Login");
+	bool check = false;
+	
+	do {
+
+		string username = read_string("\nenter username: ");
+		string password = read_string("\nenter password: ");
+
+		if ((CheckUserameAndPassword(admins,  username,password))) // check the user name in  file && and his pass
+		{ 
+
+	         check = true;
+			start(); // start the program normally 
+		}
+
+		else {
+			screen_color(red);
+			cout << "\nIncorrect password or user!\n\a";
+		}
+
+	} while (check == false);
+
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main() {
 
-	start();
+	login();
 
 
 }

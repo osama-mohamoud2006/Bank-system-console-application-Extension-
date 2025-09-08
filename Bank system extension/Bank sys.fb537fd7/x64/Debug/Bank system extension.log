@@ -1,0 +1,12 @@
+﻿  Bank system extension.cpp
+E:\projects\my library\logic_stuff.h(117,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'Bank%20system%20extension.cpp')
+  
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(66,45): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(79,36): warning C4267: '=': conversion from 'size_t' to 'short', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(265,26): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(660,31): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(689,103): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(697,104): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(729,26): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Bank system extension.vcxproj -> E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\x64\Debug\Bank system extension.exe
