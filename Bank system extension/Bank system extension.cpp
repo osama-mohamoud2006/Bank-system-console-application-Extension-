@@ -185,7 +185,7 @@ vector<stadmins> Vector_have_all_admins(string path= "Admins.text") {
 void print_header(int num = 1, bool menu2 = false , bool menu3=false) {
 	if (num == 0) cout << "\nNo One In the System!\a\n";
 
-	if (menu2 == false) {
+	if (menu2 == false && menu3==false) {
 
 		cout << "\n\n";
 		cout << setw(35) << right << " CLIENTS LIST (" << num << ")\n\n";
@@ -201,15 +201,7 @@ void print_header(int num = 1, bool menu2 = false , bool menu3=false) {
 		cout << string(77, '-') << endl;
 
 	}
-	else if (menu3 == true) {
-		cout << "\n\n";
-		cout << setw(35) << right << " Admins LIST (" << num << ")\n\n";
-
-		cout << left;
-		cout<< setw(10) << "Name"<< setw(22) << "Pin"<< endl;
-		cout << string(77, '-') << endl;
-	}
-	else {
+	else if(menu2==true) {
 		cout << "\n\n";
 		cout << setw(35) << right << " CLIENTS LIST (" << num << ")\n\n";
 
@@ -220,6 +212,16 @@ void print_header(int num = 1, bool menu2 = false , bool menu3=false) {
 
 		cout << string(77, '-') << endl;
 	}
+
+	 if (menu3 == true) {
+		cout << "\n\n";
+		cout << setw(35) << right << " Admins LIST (" << num << ")\n\n";
+
+		cout << left;
+		cout<< setw(10) << "Name"<< setw(30) << "    Pin"<< endl;
+		cout << string(77, '-') << endl;
+	}
+
 
 }
 
@@ -253,35 +255,14 @@ void printStruct(const stdata& data, bool menu2 = false )
 
 }
 
-
-//print data (FOR "SHOW ALL CLIENT (1) ) 
-void printStruct(const stadmins& data, bool menu2 = false)
+//print data (FOR "SHOW list admin (1) ) 
+void printStruct(const stadmins& data)
 {
-	if (menu2 == false) {
-
 		cout << "| " << left
-			<< setw(13) << data. << " | "
+			<< setw(13) << data.username << " | "
 			<< setw(8) << data.pin << " | "
-			<< setw(18) << data.name << " | "
-			<< setw(13) << data.phone << " | "
-			<< right
-			<< setw(10) << data.account_balance << " |"
 			<< endl;
 		cout << "+---------------+----------+--------------------+---------------+------------+" << endl;
-
-	}
-
-	else {
-
-		cout << "| " << left
-			<< setw(18) << data.name << " | "
-			<< right
-			<< setw(10) << data.account_balance << " |"
-			<< endl;
-		cout << "+---------------+----------+--------------------+---------------+------------+" << endl;
-
-	}
-
 }
 
 
@@ -307,6 +288,19 @@ void show_client_list(vector<stdata>& vprint) {
 		printStruct(client); // print clients data 
 	}
 
+
+}
+
+
+// option [1] in  admins main menu 
+void show_admin_list(vector<stadmins>& vprint) {
+
+	print_header(vprint.size(),  false, true); // print header for menu 3(admins list) 
+	for (const stadmins& client : vprint) {
+
+
+		printStruct(client); // print clients data 
+	}
 
 }
 
@@ -890,12 +884,6 @@ void StartTransactions() {
 enum enadminsStuff {listAdmins = 1, AddNewAdmin = 2, DeleteAdmin = 3, UpdateAdmin = 4, FindAdmin = 5, MainMenu = 6 };
 
 
-void PrintAdminsList(vector< stadmins> & Vector_have_all_admins) {
-
-}
-
-
-
 enadminsStuff select_Admins_option() {
 	bool is_ok = false;
 	int number = 0;
@@ -922,7 +910,9 @@ enadminsStuff select_Admins_option() {
 
 void main_admins_menu() {
 	system("cls");
-	cout << setw(5) << "\tWelcome to admins system! ";
+	cout << "\033[32m"   // green font
+		<< setw(5) << "\tWelcome to admins system! "
+		<< "\033[0m";  // reset 
 	cout << "\n_____________________________________________________\n\n";
 	cout << setw(5) << "please enter the number of the option you want: \n" << endl;
 
@@ -943,7 +933,8 @@ void ImplementOptionInAdminMenu(enadminsStuff option) {
 
 	switch (option) {
 	case enadminsStuff::listAdmins:
-		cout << "\ni will be list of admin soon!\n";
+		system("cls");
+		show_admin_list(admins);
 		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
 		break;
 	}
