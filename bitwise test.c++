@@ -39,13 +39,121 @@
 //     }
 // }
 
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-struct stAdminThatHavePer{ // struct to assigne user specific permission 
-    string name ="";
-    int per =0; 
+enum enper
+{
+    printname = 1,
+    hiname = 2,
+    fuckname = 3
+};
+struct stAdminThatHavePer
+{ // struct to assigne user specific permission
+    string name = "";
+    int per = 0;
 };
 
+bool hasPer(stAdminThatHavePer admin, enper per)
+{
+    return (admin.per & per) == per;
+}
+string enterName()
+{ // to enter the name normally
+    string name;
+    cout << "\nenter name: ";
+    cin >> name;
+    return name;
+}
 
+string PrintHisName(string name)
+{
+    return name;
+}
 
+string HelloTheName(string name)
+{
+    return "hi " + name;
+}
+
+string FuckTheName(string name)
+{
+    return "fuck you " + name;
+}
+
+bool YOrN()
+{
+
+    char y;
+    cin >> y;
+    if (y == 'y')
+        return true;
+    else
+        return false;
+}
+
+int main()
+{
+    stAdminThatHavePer Admin;
+
+    Admin.name = enterName(); // to fill name
+
+    cout << "do you want to print your name? ";
+    if (YOrN() == true)
+    {
+        Admin.per |= printname;
+    }
+    else
+    {
+        cout << "ok\n";
+    }
+
+    cout << "do you want to hello your name? ";
+    if (YOrN() == true)
+    {
+        Admin.per |= hiname;
+    }
+    else
+    {
+        cout << "ok\n";
+    }
+
+    cout << "do you want to fuck your name? ";
+    if (YOrN() == true)
+    {
+        Admin.per |= fuckname;
+    }
+    else
+    {
+        cout << "ok\n";
+    }
+
+    
+
+    if (hasPer(Admin, printname))
+    { // if he has the right to print his name
+        cout << PrintHisName(Admin.name) << endl;
+    }
+    else
+    {
+        cout << "does't have permission to print his name \n";
+    }
+
+    if (hasPer(Admin, hiname))
+    { // if he has the right to print his name
+        cout << HelloTheName(Admin.name) << endl;
+    }
+    else
+    {
+        cout << "does't have permisson to hello his name \n";
+    }
+
+    if (hasPer(Admin, fuckname))
+    { // if he has the right to print his name
+        cout << FuckTheName(Admin.name) << endl;
+    }
+    else
+    {
+        cout << "does't have permisson to fuck his name \n";
+    }
+}

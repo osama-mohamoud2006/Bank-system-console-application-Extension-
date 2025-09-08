@@ -24,16 +24,33 @@ struct stdata
 struct stadmins {
 	string username = "";
 	string pin = "";
-	int per = 0;
+	int per = 0; // permissions 
+	bool MarkForDelete = false;
 };
 
 enum enOption { none = 0, showClientList = 1, addNewClient = 2, deleteClient = 3, updateClient = 4, searchClient = 5, Transactions = 6,  AdminsScreen=7 ,logout = 8 };
+enum enAdminPermissions { PlistAdmins = 1, PAddNewAdmin = 2, PDeleteAdmin = 3, PUpdateAdmin = 4, PFindAdmin = 5, PMainMenu = 6 };
 
+// declarations to access it anywhere
 void login();
-
-const string path = "local db.text";
-const string AdminsPer = "Admins.text";
+//bool CheckUsernameAndPassword(vector<stadmins>, string, string);
+//basics for program to work properly///////////////
+const string path = "local db.text"; // clients
+const string AdminsPer = "Admins.text"; // admins 
 const string delmi = "#//#";
+//////////////////////////////////////////////////////
+
+bool CheckUsernameInVector(vector<stadmins>& VerctorHaveAdminsList, string username , stadmins &Admin) {
+	for (stadmins& admins : VerctorHaveAdminsList)
+	{
+		if ( admins.username == username) { 
+			Admin = admins;
+			return true;
+		}
+	}
+	return false;
+}
+
 
 void  back_to_menu(string TextAppearWhenYouBack = "press any key to back to main menu !") {
 	cout << "\033[1;31m";
@@ -64,6 +81,16 @@ stdata fill_data(string account_number) {
 	data.name = read_full_line("\nenter name: ");
 	data.phone = read_string("\nenter your phone number: ");
 	data.account_balance = enter_postive_number("\nenter account balance: ");
+	return data;
+
+
+}
+
+//for admins only///
+stadmins Fill_Admin_data(string username) {
+	stadmins data;
+	data.username = username;// pk
+	data.pin = read_string("\nenter pin: ");
 	return data;
 
 
@@ -108,6 +135,7 @@ stdata convert_line_into_record(string new_client_line) {
 
 }
 
+//for admins///
 stadmins convert_line_into_recordAdmins(string new_admin_line) {
 	vector<string> dataSplited;
 	stadmins data;
@@ -151,6 +179,7 @@ vector<stdata> Vector_have_all_data(string path) {
 	return v_with_all_data;
 }
 
+//for admins///
 vector<stadmins> Vector_have_all_admins(string path= "Admins.text") {
 
 	vector<stadmins> v_with_all_data;
@@ -255,7 +284,7 @@ void printStruct(const stdata& data, bool menu2 = false )
 
 }
 
-//print data (FOR "SHOW list admin (1) ) 
+//print data (FOR "SHOW list admin (1) ) //for admins///
 void printStruct(const stadmins& data)
 {
 		cout << "| " << left
@@ -275,6 +304,16 @@ void print_client_details(stdata Client_data) {
 	cout << "\n_________________________________________________\n";
 }
 
+
+//print data for 1 admin only  // for admin only//
+void print_client_details(stadmins admin_data) {
+	cout << "\nthe following are the account details :\n";
+	cout << "____________________________\n";
+	print_header(  1,  false, true); // to print the proper header for admin 
+	printStruct(admin_data); // to print the client data 
+	cout << "\n_________________________________________________\n";
+}
+
 // option [1] in main menu 
 void show_client_list(vector<stdata>& vprint) {
 
@@ -291,8 +330,7 @@ void show_client_list(vector<stdata>& vprint) {
 
 }
 
-
-// option [1] in  admins main menu 
+// option [1] in  admins main menu  //for admins only //
 void show_admin_list(vector<stadmins>& vprint) {
 
 	print_header(vprint.size(),  false, true); // print header for menu 3(admins list) 
@@ -325,6 +363,12 @@ string convert_stdata_into_single_line(stdata data) {
 	return (data.account_number + delmi + (data.pin) + delmi + data.name + delmi + data.phone + delmi + to_string(data.account_balance));
 }
 
+//convert stadmins into single line to store in file  //for admins only // 
+string convert_stdata_into_single_line(stadmins data) {
+	return (data.username + delmi + data.pin + delmi+ to_string(data.per));
+}
+
+
 //take vector with edited data and write it into file
 void edit_file(vector <string>& lines_of_data) {
 
@@ -345,6 +389,25 @@ void edit_file(vector <string>& lines_of_data) {
 
 }
 
+//edit admin file 
+void edit_Admin_file(vector <string>& lines_of_data ) {
+
+	fstream write;
+	write.open(AdminsPer, ios::out); //write mode
+
+	if (write.is_open()) {
+
+		for (const string& new_client_line : lines_of_data) {
+
+			if (new_client_line != "") write << new_client_line << endl;
+
+		}
+		write.close();
+	}
+
+}
+
+
 char choice_y_n() {
 	char c = ' ';
 	cin >> c;
@@ -352,6 +415,7 @@ char choice_y_n() {
 	return c;
 }
 
+//for stdata 
 vector <string> New_lines_to_push_in_file_after_delete(vector<stdata>& all_data_from_file_in_vector, stdata client_data)
 {
 
@@ -372,6 +436,28 @@ vector <string> New_lines_to_push_in_file_after_delete(vector<stdata>& all_data_
 	return remaining_clients_after_delete;
 }
 
+//for stadmins /// for admins only ///
+vector <string> New_lines_to_push_in_file_after_delete(vector<stadmins>& all_data_from_file_in_vector, stadmins admins_data)
+{
+
+	vector<string> remaining_clients_after_delete; //(empty string) to save the data again without marked for delete 
+
+	for (stadmins& admins_data : all_data_from_file_in_vector) { // to find the marked for delete and ignore it in new push 
+
+		if (admins_data.MarkForDelete == false)
+		{
+			string line_of_data = convert_stdata_into_single_line(admins_data); // take the struct and convert it into line 
+
+			remaining_clients_after_delete.push_back(line_of_data);//push All the data(lines) without marked for delete
+
+		}
+
+
+	}
+	return remaining_clients_after_delete;
+}
+
+//for stdata 
 vector<string> update_before_push_into_file(vector<stdata>& all_data_from_file_in_vector) {
 
 	vector<string>New_lines_to_push_in_file_after_update; //push old lines with updated line 
@@ -386,7 +472,23 @@ vector<string> update_before_push_into_file(vector<stdata>& all_data_from_file_i
 
 }
 
-//the main logic of update_client function 
+//for admin only ///
+vector<string> update_before_push_into_file(vector<stadmins>& all_data_from_file_in_vector) {
+
+	vector<string>New_lines_to_push_in_file_after_update; //push old lines with updated line 
+
+	for (const stadmins& Edited_data : all_data_from_file_in_vector) {
+
+		string Nline_of_data = convert_stdata_into_single_line(Edited_data); // convert struct into line
+		New_lines_to_push_in_file_after_update.push_back(Nline_of_data);
+	}
+
+	return New_lines_to_push_in_file_after_update;
+
+}
+
+
+//the main logic of update_client function //for stdata // 
 vector<stdata> update(vector<stdata>& AlldataFromVector, stdata& FilledDate_Client_to_update, string account_number_to_update) {
 
 	vector<stdata> Edit_the_orignail_data;
@@ -407,9 +509,42 @@ vector<stdata> update(vector<stdata>& AlldataFromVector, stdata& FilledDate_Clie
 }
 
 
-void account_is_exist(string account_numberFromUser) {
-	cout << "\nclient with account number " << account_numberFromUser << " is exist!\n";
-	cout << "\a";
+//// username is primary key ////////////////////////////////////
+
+//the main logic of update admin function  // for admins only//
+vector<stadmins> update(vector<stadmins>& AlldataFromVector, stadmins& FilledData_admin_to_update, string username) {
+
+	vector<stadmins> Edit_the_orignail_data;
+
+	FilledData_admin_to_update.username = username; // new data with account number 
+
+	for (stadmins& Origninal_data : AlldataFromVector) {
+		if (Origninal_data.username == FilledData_admin_to_update.username) {
+
+			Edit_the_orignail_data.push_back(FilledData_admin_to_update);//push new data only
+
+		}
+		else {
+			Edit_the_orignail_data.push_back(Origninal_data);
+		}
+	}
+	return Edit_the_orignail_data;
+}
+
+
+//for clients & admins
+void account_is_exist(string account_numberFromUser , bool ForAdmins = false) {
+
+	if (ForAdmins == true) {
+		cout << "\nadmin with username " << account_numberFromUser << " is exist!\n";
+		cout << "\a";
+	}
+
+	else {
+		cout << "\nclient with account number " << account_numberFromUser << " is exist!\n";
+		cout << "\a";
+	}
+	
 }
 
 
@@ -425,6 +560,18 @@ void add_new_client_to_file(vector<stdata>& all_data_from_file_in_vector) {
 	edit_file(NewLine);
 }
 
+// for admins only//
+void add_new_admin_to_file(vector<stadmins>& all_data_from_file_in_vector) {
+
+	vector <string> NewLine;
+	for (stadmins& d : all_data_from_file_in_vector) {
+
+		string line = convert_stdata_into_single_line(d);
+		NewLine.push_back(line);
+	}
+
+	edit_Admin_file(NewLine);
+}
 
 //option [2]//////
 void add_client(vector<stdata>& all_data_from_file_in_vector) {
@@ -440,7 +587,7 @@ void add_client(vector<stdata>& all_data_from_file_in_vector) {
 
 	cout << endl;
 	do {
-
+		///////////////////donot touch me ////////////////////////////////////////
 		account_numberFromUser = read_string("\nenter account number: "); // enter account number 
 
 		// if the account exists 
@@ -476,6 +623,65 @@ void add_client(vector<stdata>& all_data_from_file_in_vector) {
 
 
 }
+
+
+///for admins only // 
+void add_Admin(vector<stadmins>& all_data_from_file_in_vector) {
+
+	print_menu_option("adding new admin"); // print the screen menu 
+	stadmins admins_data;
+	string username = "";
+	char choice = 'Y';
+	bool is_account_exist = false;
+
+
+	vector<stadmins> NewData;
+	NewData = all_data_from_file_in_vector; // make copy of struct 
+
+	cout << endl;
+	do {
+
+		username = read_string("\nenter username: "); // enter username  
+
+		// if the username exists 
+		while (CheckUsernameInVector(all_data_from_file_in_vector, username, admins_data) == true) {
+
+			account_is_exist(username,true);
+			cout << "\nenter another username, ";
+			username = read_string("enter username: "); // enter account number 
+
+		}
+
+		cout << "\n_______________________________________________\n";
+
+		// if the user isn't existing then it will get out from while loop 
+		cout << "\nFill admin data:";
+		cout << "\n__________________________________________\n";
+		admins_data = Fill_Admin_data(username); // fill data by user(stdata) 
+		
+		NewData.push_back(admins_data); // push the new data into struct 
+
+		all_data_from_file_in_vector = NewData; // make the original vector have updated data 
+
+		add_new_admin_to_file(all_data_from_file_in_vector);// send the new vector with new lines to add in file 
+
+		cout << "\n________________________________\n";
+		cout << "the admin addedd successfully!\n";
+		cout << "________________________________\n";
+
+		cout << "\ndo you want to add another admin [y],[n]: ";
+		choice = choice_y_n(); // to input option 
+
+	} while (choice == 'Y');
+
+
+}
+
+
+
+
+
+
 
 // mark the record to be deleted 
 bool mark_for_delete(vector<stdata>& AlldataFromVector, string Client_to_delete) {
@@ -883,7 +1089,6 @@ void StartTransactions() {
 
 enum enadminsStuff {listAdmins = 1, AddNewAdmin = 2, DeleteAdmin = 3, UpdateAdmin = 4, FindAdmin = 5, MainMenu = 6 };
 
-
 enadminsStuff select_Admins_option() {
 	bool is_ok = false;
 	int number = 0;
@@ -934,9 +1139,16 @@ void ImplementOptionInAdminMenu(enadminsStuff option) {
 	vector<stadmins> admins = Vector_have_all_admins("Admins.text"); // vector have admins list , load admins list into vector
 
 	switch (option) {
+
 	case enadminsStuff::listAdmins:// option [1]
 		system("cls");
 		show_admin_list(admins);
+		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
+		break;
+
+	case enadminsStuff::AddNewAdmin:
+		system("cls");
+		add_Admin(admins);
 		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
 		break;
 	}
@@ -1033,7 +1245,7 @@ void start()
 
 // check if username exists or not 
 
-bool CheckUserameAndPassword(vector<stadmins> VerctorHaveAdminsList, string username,string pin) {
+bool CheckUsernameAndPassword(vector<stadmins> VerctorHaveAdminsList, string username,string pin) {
 	for (stadmins& admins : VerctorHaveAdminsList)
 	{
 		if (admins.pin == pin && (admins.username == username) ) return true;
@@ -1055,7 +1267,7 @@ void login() {
 		string username = read_string("\nenter username: ");
 		string password = read_string("\nenter password: ");
 
-		if ((CheckUserameAndPassword(admins,  username,password))) // check the user name in  file && and his pass
+		if ((CheckUsernameAndPassword(admins,  username,password))) // check the user name in  file && and his pass
 		{ 
 
 	         check = true;
@@ -1071,8 +1283,6 @@ void login() {
 
 
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main() {
 
