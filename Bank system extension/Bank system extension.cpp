@@ -24,7 +24,7 @@ struct stdata
 struct stadmins {
 	string username = "";
 	string pin = "";
-	//int per = 0;
+	int per = 0;
 };
 
 enum enOption { none = 0, showClientList = 1, addNewClient = 2, deleteClient = 3, updateClient = 4, searchClient = 5, Transactions = 6,  AdminsScreen=7 ,logout = 8 };
@@ -115,7 +115,7 @@ stadmins convert_line_into_recordAdmins(string new_admin_line) {
 
 	data.username = dataSplited[0];
 	data.pin = dataSplited[1];
-	//data.per = dataSplited[2]; // --> for permissions 
+	data.per = stoi(dataSplited[2]); // --> for permissions 
 
 
 	return data;
@@ -218,7 +218,7 @@ void print_header(int num = 1, bool menu2 = false , bool menu3=false) {
 		cout << setw(35) << right << " Admins LIST (" << num << ")\n\n";
 
 		cout << left;
-		cout<< setw(10) << "Name"<< setw(30) << "    Pin"<< endl;
+		cout<< setw(10) << "Username  "<< setw(15) << "    Pin"   << "Permissions"<<endl;
 		cout << string(77, '-') << endl;
 	}
 
@@ -260,7 +260,7 @@ void printStruct(const stadmins& data)
 {
 		cout << "| " << left
 			<< setw(13) << data.username << " | "
-			<< setw(8) << data.pin << " | "
+			<< setw(8) << data.pin << " | " << setw(8) << data.per << " | "
 			<< endl;
 		cout << "+---------------+----------+--------------------+---------------+------------+" << endl;
 }
@@ -915,7 +915,7 @@ void main_admins_menu() {
 		<< "\033[0m";  // reset 
 	cout << "\n_____________________________________________________\n\n";
 	cout << "\033[33m" << setw(5)
-		<< "Please enter the number of the option you want: \n"
+		<< "Please enter the number of the option you want: \n\n"
 		<< "\033[0m" ;
 
 	cout << setw(4) << "\t[1] list admins." << endl;
@@ -934,7 +934,7 @@ void ImplementOptionInAdminMenu(enadminsStuff option) {
 	vector<stadmins> admins = Vector_have_all_admins("Admins.text"); // vector have admins list , load admins list into vector
 
 	switch (option) {
-	case enadminsStuff::listAdmins:
+	case enadminsStuff::listAdmins:// option [1]
 		system("cls");
 		show_admin_list(admins);
 		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
