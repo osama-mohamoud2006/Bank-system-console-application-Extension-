@@ -54,8 +54,15 @@ bool CheckUsernameInVector(vector<stadmins>& VerctorHaveAdminsList, string usern
 
 //for admins 
 // pass user name and returns it data 
-bool CheckUserAndReturnItsStruct(vector<stadmins> AllAdminsData,string username , stadmins &AdminData) {
+stadmins CheckUserAndReturnItsStruct(vector<stadmins> AllAdminsData,string username , stadmins &AdminData) {
 
+	for (stadmins& admin : AllAdminsData) {
+		
+		if (admin.username == username) {
+			AdminData = admin;
+			return AdminData;
+		}
+	}
 	
 }
 
