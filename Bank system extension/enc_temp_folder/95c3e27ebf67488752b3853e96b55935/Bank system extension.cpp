@@ -68,8 +68,17 @@ stadmins CheckUserAndReturnItsStruct(vector<stadmins> AllAdminsData,string usern
 	
 }
 
-bool CheckPermission(stadmins Cha)
 
+//string ReturnUsername(vector<stadmins> VerctorHaveAdminsList, string username, string pin) {
+//	for (stadmins& admins : VerctorHaveAdminsList)
+//	{
+//		if (admins.pin == pin && (admins.username == username)) {
+//
+//			return true;
+//		}
+//	}
+//	return false;
+//}
 
 
 
