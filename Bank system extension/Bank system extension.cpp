@@ -31,7 +31,7 @@ struct stadmins {
 stadmins AdminThatWillAcess;
 
 enum enOption { none = 0, showClientList = 1, addNewClient = 2, deleteClient = 3, updateClient = 4, searchClient = 5, Transactions = 6,  AdminsScreen=7 ,logout = 8 };
-enum enAdminPermissions { PlistAdmins = 1, PAddNewAdmin = 2, PDeleteAdmin = 3, PUpdateAdmin = 4, PFindAdmin = 5, PMainMenu = 6 };
+enum enAdminPermissions { PListClient = 1, PAddNewClient = 2, PDeleteClient = 3, PUpdateClient = 4, PSearchClient = 5 , PClientTransactions=6 , PManageAdmins=7};
 
 // declarations to access it anywhere
 void login();
@@ -68,11 +68,14 @@ stadmins CheckUserAndReturnItsStruct(vector<stadmins> AllAdminsData,string usern
 	
 }
 
+//for admin only ///
 bool CheckPermission(stadmins CheckAdmin, enAdminPermissions Permission) {
 	return (CheckAdmin.per & Permission) == Permission;
 }
 
-
+void YouDonotHavePerTextMessage() {
+	cout << "you don't have permisson to access this section \n contact your admin or die better!\a\n";
+}
 
 
 void  back_to_menu(string TextAppearWhenYouBack = "press any key to back to main menu !") {
@@ -1171,17 +1174,7 @@ void ImplementOptionInAdminMenu(enadminsStuff option) {
 
 	case enadminsStuff::AddNewAdmin:
 		system("cls");
-		//add_Admin(admins);
-		if(CheckPermission(AdminThatWillAcess, enAdminPermissions::PAddNewAdmin)) {
-        cout << "For testing only: " << AdminThatWillAcess.username << endl;
-		cout << "For testing only: " << AdminThatWillAcess.pin << endl;
-		cout << "For testing only: " << AdminThatWillAcess.per << endl;
-
-		}
-		else {
-			cout << "you don't have per!\n\a";
-		}
-
+		add_Admin(admins);
 		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
 		break;
 	}
@@ -1204,7 +1197,7 @@ void StartAdminsMenuScreen() {
 
 	} while (choice != enadminsStuff::MainMenu);
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void do_job_according_to_number(enOption option) {
 	system("cls");
 	//the vector that have all data as struct 
@@ -1212,38 +1205,91 @@ void do_job_according_to_number(enOption option) {
 	switch (option) {
 
 	case enOption::showClientList:
-		show_client_list(all_data_from_file_in_vector); // option[1]
+
+		if (CheckPermission(AdminThatWillAcess, enAdminPermissions::PListClient)) {
+			show_client_list(all_data_from_file_in_vector); // option[1]
+
+		}
+		else {
+			YouDonotHavePerTextMessage(); // priint message 
+		}
+
 		back_to_menu(); // to back to main menu again 
 		break;
 
 	case enOption::addNewClient:
-		add_client(all_data_from_file_in_vector); // option[2]
+
+		if (CheckPermission(AdminThatWillAcess, enAdminPermissions::PAddNewClient)) {
+			add_client(all_data_from_file_in_vector); // option[2]
+		}
+		else {
+			YouDonotHavePerTextMessage(); // priint message 
+		}
 		back_to_menu(); // to back to main menu again 
 		break;
 
 	case enOption::deleteClient:
+		if (CheckPermission(AdminThatWillAcess, enAdminPermissions::PDeleteClient)) {
+
 		delete_client(all_data_from_file_in_vector); // option [3]
+
+		}
+		else {
+
+			YouDonotHavePerTextMessage(); // priint message 
+		}
+
 		back_to_menu(); // to back to main menu again 
 		break;
 
 	case enOption::updateClient:
-		update_client(all_data_from_file_in_vector); //option [4]
+		if (CheckPermission(AdminThatWillAcess, enAdminPermissions::PUpdateClient)) {
+			update_client(all_data_from_file_in_vector); //option [4]
+		}
+		else {
+
+			YouDonotHavePerTextMessage(); // priint message 
+		}
+
 		back_to_menu(); // to back to main menu again 
 		break;
 
 	case enOption::searchClient:
-		find_client(all_data_from_file_in_vector); // option [5]
+		if (CheckPermission(AdminThatWillAcess, enAdminPermissions::PSearchClient)) {
+			find_client(all_data_from_file_in_vector); // option [5]
+		}
+		else {
+
+			YouDonotHavePerTextMessage(); // priint message 
+		}
+
 		back_to_menu(); // to back to main menu again 
 		break;
 
 	case enOption::Transactions: // option [6]
-		StartTransactions();
+		if (CheckPermission(AdminThatWillAcess, enAdminPermissions::PClientTransactions)) {
+			StartTransactions();
+		}
+		else {
+
+			YouDonotHavePerTextMessage(); // priint message 
+		}
+
 		//back_to_menu(); // to back to main menu again 
 		break;
 
 	case enOption::AdminsScreen:// option[7]
-		StartAdminsMenuScreen();
+		if (CheckPermission(AdminThatWillAcess, enAdminPermissions::PManageAdmins)) {
+			StartAdminsMenuScreen();
+		}
+		else {
+
+			YouDonotHavePerTextMessage(); // priint message 
+		}
+
 		break;
+
+
 	case enOption::logout: // option[8]
 		exit_screen();
 		break;
