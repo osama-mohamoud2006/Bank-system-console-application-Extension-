@@ -1172,10 +1172,15 @@ void ImplementOptionInAdminMenu(enadminsStuff option) {
 	case enadminsStuff::AddNewAdmin:
 		system("cls");
 		//add_Admin(admins);
-
-		cout << "For testing only: " << AdminThatWillAcess.username << endl;
+		if(CheckPermission(AdminThatWillAcess, enAdminPermissions::PAddNewAdmin)) {
+        cout << "For testing only: " << AdminThatWillAcess.username << endl;
 		cout << "For testing only: " << AdminThatWillAcess.pin << endl;
 		cout << "For testing only: " << AdminThatWillAcess.per << endl;
+
+		}
+		else {
+			cout << "you don't have per!\n\a";
+		}
 
 		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
 		break;
