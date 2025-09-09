@@ -68,7 +68,9 @@ stadmins CheckUserAndReturnItsStruct(vector<stadmins> AllAdminsData,string usern
 	
 }
 
-bool CheckPermission(stadmins Cha)
+bool CheckPermission(stadmins CheckAdmin, enAdminPermissions Permission) {
+	return (CheckAdmin.per & Permission) == Permission;
+}
 
 
 
