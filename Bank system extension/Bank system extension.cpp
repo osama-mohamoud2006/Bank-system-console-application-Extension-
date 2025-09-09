@@ -40,6 +40,7 @@ const string AdminsPer = "Admins.text"; // admins
 const string delmi = "#//#";
 //////////////////////////////////////////////////////
 
+//for admins
 bool CheckUsernameInVector(vector<stadmins>& VerctorHaveAdminsList, string username , stadmins &Admin) {
 	for (stadmins& admins : VerctorHaveAdminsList)
 	{
@@ -50,6 +51,14 @@ bool CheckUsernameInVector(vector<stadmins>& VerctorHaveAdminsList, string usern
 	}
 	return false;
 }
+
+//for admins 
+// pass user name and returns it data 
+bool CheckUserAndReturnItsStruct(vector<stadmins> AllAdminsData,string username , stadmins &AdminData) {
+
+	
+}
+
 
 
 void  back_to_menu(string TextAppearWhenYouBack = "press any key to back to main menu !") {
