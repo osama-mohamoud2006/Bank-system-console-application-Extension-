@@ -1,72 +1,32 @@
-// #include <iostream>
-// using namespace std;
-
-// enum enPermissions
-// {
-//     pAddClient = 1 << 0,    // 0001
-//     pDeleteClient = 1 << 1, // 0010
-//     pUpdateClient = 1 << 2, // 0100
-//     pListClients = 1 << 3,  // 1000
-//     // ممكن تزود اللي انت عايزه
-// };
-
-// struct Admin
-// {
-//     string name;
-//     int permissions = 0; // مبدئياً مفيش صلاحيات
-// };
-
-// bool hasPermission(Admin admin, enPermissions perm)
-// {
-//     return (admin.permissions & perm) == perm;
-// }
-
-// int main()
-// {
-
-//     Admin a1;
-//     a1.name = "Osama";
-//     // نديله صلاحيات إضافة وحذف
-//     a1.permissions = pDeleteClient | pUpdateClient | pListClients; // 0001 | 0010 = 0011
-
-//     if (hasPermission(a1, pListClients))
-//     {
-//         cout << "You can\n";
-//     }
-//     else
-//     {
-//         cout << "Access Denied\n";
-//     }
-// }
 
 #include <iostream>
 using namespace std;
+// you must assign enum according 2 power of 2
+// EX : 1,2,4,8,16,32,64,128,256
+enum enper {printname = 1,hiname = 2, fuckname = 4}; // this is very imp enum it is used to assigen permission and use it to check also 
 
-enum enper
-{
-    printname = 1,
-    hiname = 2,
-    fuckname = 4
-};
 struct stAdminThatHavePer
 { // struct to assigne user specific permission
     string name = "";
     int per = 0;
 };
 
+// this function is very importan fr it is used to check if you have per or not
+//how? it takes the admin.per (int) and use & with the enum enper:: you want to check if the number == the enum enper::  then it return true else false
 bool hasPer(stAdminThatHavePer admin, enper per)
 {
     return (admin.per & per) == per;
 }
 
-string enterName()
-{ // to enter the name normally
+string enterName() // to enter the name normally
+{
     string name;
     cout << "\nenter name: ";
     cin >> name;
     return name;
 }
 
+// functions to test only 
 string PrintHisName(string name)
 {
     return name;
@@ -95,6 +55,11 @@ bool YOrN()
 
 int main()
 {
+    /*
+    | --> used to assign permisson
+    & --> to check permission 
+    
+    */
     stAdminThatHavePer Admin;
 
     Admin.name = enterName(); // to fill name
@@ -102,7 +67,7 @@ int main()
     cout << "do you want to print your name? ";
     if (YOrN() == true)
     {
-        Admin.per |= printname;
+        Admin.per |= printname; // to assign the permisson 
     }
     else
     {
@@ -131,8 +96,8 @@ int main()
 
     cout<<Admin.per<<endl;
 
-    if (hasPer(Admin, enper::printname))
-    { // if he has the right to print his name
+    if (hasPer(Admin, enper::printname))// if he has the right to print his name
+    { 
         cout << PrintHisName(Admin.name) << endl;
     }
     else
@@ -140,8 +105,8 @@ int main()
         cout << "does't have permission to print his name \n";
     }
 
-    if (hasPer(Admin, enper::hiname))
-    { // if he has the right to print his name
+    if (hasPer(Admin, enper::hiname))// if he has the right to print his name
+    { 
         cout << HelloTheName(Admin.name) << endl;
     }
     else
@@ -149,8 +114,8 @@ int main()
         cout << "does't have permisson to hello his name \n";
     }
 
-    if (hasPer(Admin, enper::fuckname))
-    { // if he has the right to print his name
+    if (hasPer(Admin, enper::fuckname))// if he has the right to print his name
+    { 
         cout << FuckTheName(Admin.name) << endl;
     }
     else
