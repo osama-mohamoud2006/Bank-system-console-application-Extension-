@@ -74,11 +74,13 @@ bool CheckPermission(stadmins CheckAdmin, enAdminPermissions Permission) {
 }
 
 void YouDonotHavePerTextMessage() {
-	cout << "you don't have permisson to access this section \n contact your admin or die better!\a\n";
+	cout << "\tyou don't have permisson to access this section \n\t contact your admin or die better!\a\n";
+	screen_color(red);
 }
 
 
 void  back_to_menu(string TextAppearWhenYouBack = "press any key to back to main menu !") {
+	screen_color(black);
 	cout << "\033[1;31m";
 	cout << "\n "<< TextAppearWhenYouBack << endl;
 	cout << "\033[0m";
