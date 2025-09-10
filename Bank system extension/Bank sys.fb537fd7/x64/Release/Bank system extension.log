@@ -1,0 +1,18 @@
+﻿  Bank system extension.cpp
+E:\projects\my library\logic_stuff.h(117,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'Bank%20system%20extension.cpp')
+  
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(124,45): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(147,36): warning C4267: '=': conversion from 'size_t' to 'short', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(364,26): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(377,26): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(1175,31): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(1204,103): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(1212,104): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(1244,26): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\Bank system extension.cpp(69): warning C4715: 'CheckUserAndReturnItsStruct': not all control paths return a value
+  All 542 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Bank system extension.vcxproj -> E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\Bank system extension\x64\Release\Bank system extension.exe
