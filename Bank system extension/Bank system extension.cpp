@@ -1351,10 +1351,10 @@ void do_job_according_to_number(enOption option) {
 		else {
 
 			YouDonotHavePerTextMessage(); // priint message 
-		
+		    back_to_menu();
 		}
 
-	//back_to_menu();
+	
 		break;
 
 
