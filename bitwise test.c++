@@ -46,7 +46,7 @@ enum enper
 {
     printname = 1,
     hiname = 2,
-    fuckname = 3
+    fuckname = 4
 };
 struct stAdminThatHavePer
 { // struct to assigne user specific permission
@@ -58,6 +58,7 @@ bool hasPer(stAdminThatHavePer admin, enper per)
 {
     return (admin.per & per) == per;
 }
+
 string enterName()
 { // to enter the name normally
     string name;
@@ -128,9 +129,9 @@ int main()
         cout << "ok\n";
     }
 
-    
+    cout<<Admin.per<<endl;
 
-    if (hasPer(Admin, printname))
+    if (hasPer(Admin, enper::printname))
     { // if he has the right to print his name
         cout << PrintHisName(Admin.name) << endl;
     }
@@ -139,7 +140,7 @@ int main()
         cout << "does't have permission to print his name \n";
     }
 
-    if (hasPer(Admin, hiname))
+    if (hasPer(Admin, enper::hiname))
     { // if he has the right to print his name
         cout << HelloTheName(Admin.name) << endl;
     }
@@ -148,7 +149,7 @@ int main()
         cout << "does't have permisson to hello his name \n";
     }
 
-    if (hasPer(Admin, fuckname))
+    if (hasPer(Admin, enper::fuckname))
     { // if he has the right to print his name
         cout << FuckTheName(Admin.name) << endl;
     }

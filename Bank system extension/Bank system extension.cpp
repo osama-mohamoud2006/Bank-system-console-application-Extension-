@@ -31,7 +31,7 @@ struct stadmins {
 stadmins AdminThatWillAcess;
 
 enum enOption { none = 0, showClientList = 1, addNewClient = 2, deleteClient = 3, updateClient = 4, searchClient = 5, Transactions = 6,  AdminsScreen=7 ,logout = 8 };
-enum enAdminPermissions { PListClient = 1, PAddNewClient = 2, PDeleteClient = 3, PUpdateClient = 4, PSearchClient = 5 , PClientTransactions=6 , PManageAdmins=7};
+enum enAdminPermissions { PListClient = 1, PAddNewClient = 2, PDeleteClient = 4, PUpdateClient = 8, PSearchClient = 16 , PClientTransactions=32 , PManageAdmins=64};
 
 // declarations to access it anywhere
 void login();
@@ -650,6 +650,59 @@ void add_client(vector<stdata>& all_data_from_file_in_vector) {
 
 }
 
+// for admins // ask the admin to give the full access for another admin or not 
+bool GiveTheAdminFullAccess(stadmins &admins_data) {
+
+	cout << "\n\nDo you want to give the full access to this admin? ";
+	char c = choice_y_n();
+
+	if (c == 'Y') {
+      admins_data.per = -1;
+	  return true; 
+	}
+	
+	else admins_data.per = 0;
+
+	return false;
+
+}
+
+// for admins // give admin specific roots on system
+void CustomAdminPer(stadmins& admins_data) {
+
+	cout << "\nShow client list? ";
+	if (choice_y_n() == 'Y') {
+		admins_data.per |= enAdminPermissions::PListClient;
+	}
+
+	cout << "\nAdd new client ? ";
+	if (choice_y_n() == 'Y') {
+		admins_data.per |= enAdminPermissions::PAddNewClient;
+	}
+
+	cout << "\nDelete client ? ";
+	if (choice_y_n() == 'Y') {
+		admins_data.per |= enAdminPermissions::PDeleteClient;
+	}
+
+	cout << "\nUpdate client ? ";
+	if (choice_y_n() == 'Y') {
+		admins_data.per |= enAdminPermissions::PUpdateClient;
+	}
+
+	cout << "\nFind client ? ";
+	if (choice_y_n() == 'Y') {
+		admins_data.per |= enAdminPermissions::PSearchClient;
+	}
+
+	cout << "\nTransaction permission ? ";
+	if (choice_y_n() == 'Y') {
+		admins_data.per |= enAdminPermissions::PClientTransactions;
+	}
+
+
+}
+
 
 ///for admins only // 
 void add_Admin(vector<stadmins>& all_data_from_file_in_vector) {
@@ -667,7 +720,7 @@ void add_Admin(vector<stadmins>& all_data_from_file_in_vector) {
 	cout << endl;
 	do {
 
-		username = read_string("\nenter username: "); // enter username  
+		username = read_string("\nenter username: "); // enter username   // read string not the  full line
 
 		// if the username exists 
 		while (CheckUsernameInVector(all_data_from_file_in_vector, username, admins_data) == true) {
@@ -683,8 +736,20 @@ void add_Admin(vector<stadmins>& all_data_from_file_in_vector) {
 		// if the user isn't existing then it will get out from while loop 
 		cout << "\nFill admin data:";
 		cout << "\n__________________________________________\n";
-		admins_data = Fill_Admin_data(username); // fill data by user(stdata) 
+		admins_data = Fill_Admin_data(username); // fill data by admin(admin) 
 		
+		// give the full access
+		if (GiveTheAdminFullAccess(admins_data)) 
+		{
+
+			cout << "\n\nThe Admin \"" << admins_data.username << "\" have the full access on the system!\n\n";
+		}
+
+		else
+		{
+			CustomAdminPer(admins_data);
+		}
+
 		NewData.push_back(admins_data); // push the new data into struct 
 
 		all_data_from_file_in_vector = NewData; // make the original vector have updated data 
@@ -1289,7 +1354,7 @@ void do_job_according_to_number(enOption option) {
 		
 		}
 
-	back_to_menu();
+	//back_to_menu();
 		break;
 
 
