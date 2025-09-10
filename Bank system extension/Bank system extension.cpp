@@ -562,7 +562,7 @@ vector<stadmins> update(vector<stadmins>& AlldataFromVector, stadmins& FilledDat
 void account_is_exist(string account_numberFromUser , bool ForAdmins = false) {
 
 	if (ForAdmins == true) {
-		cout << "\nadmin with username " << account_numberFromUser << " is exist!\n";
+		cout << "\nadmin with username \"" << account_numberFromUser << "\" is exist!\n";
 		cout << "\a";
 	}
 
@@ -703,6 +703,21 @@ void CustomAdminPer(stadmins& admins_data) {
 
 }
 
+//for admins // 
+void GiveAccessToTheNewAdmin(stadmins& admins_data) {
+
+	if (GiveTheAdminFullAccess(admins_data))
+	{
+
+		cout << "\n\nThe Admin \"" << admins_data.username << "\" have the full access on the system!\n\n";
+	}
+
+	else
+	{
+		CustomAdminPer(admins_data);
+	}
+}
+
 
 ///for admins only // 
 void add_Admin(vector<stadmins>& all_data_from_file_in_vector) {
@@ -738,17 +753,8 @@ void add_Admin(vector<stadmins>& all_data_from_file_in_vector) {
 		cout << "\n__________________________________________\n";
 		admins_data = Fill_Admin_data(username); // fill data by admin(admin) 
 		
-		// give the full access
-		if (GiveTheAdminFullAccess(admins_data)) 
-		{
-
-			cout << "\n\nThe Admin \"" << admins_data.username << "\" have the full access on the system!\n\n";
-		}
-
-		else
-		{
-			CustomAdminPer(admins_data);
-		}
+		
+		GiveAccessToTheNewAdmin(admins_data);// give the full access OR custom access
 
 		NewData.push_back(admins_data); // push the new data into struct 
 
