@@ -24,9 +24,6 @@ The project is built in C++ and relies on a custom library (`AllStuff.h`) for ut
   - [Admin Management](#admin-management)
 - [Data Storage](#data-storage)
 - [Custom Library Dependencies](#custom-library-dependencies)
-- [Known Issues and Limitations](#known-issues-and-limitations)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
