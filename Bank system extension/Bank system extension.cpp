@@ -73,8 +73,9 @@ bool CheckPermission(stadmins CheckAdmin, enAdminPermissions Permission) {
 	return (CheckAdmin.per & Permission) == Permission;
 }
 
+// for admin just silly mesaage // 
 void YouDonotHavePerTextMessage() {
-	cout << "\tyou don't have permisson to access this section \n\t contact your admin or die better!\a\n";
+	cout << "\n\n\tyou don't have permisson to access this section \n\t contact your admin or die better!\a\n";
 	screen_color(red);
 }
 
@@ -95,11 +96,23 @@ void print_menu_option(string option_name) {
 }
 //////////////////////////////////////////////////////////////////////////////////
 
-void the_account_isnot_exist() {
-	cout << "\a";
+void the_account_isnot_exist(bool menu2 = false) {
+
+	if (menu2 == false) {
+
+     cout << "\a";
 	cout << "\nthis account number isn't exist!\n";
 	screen_color(red);
 	screen_color(black);
+
+	}
+	else {
+
+		cout << "\a";
+		cout << "\nthis username isn't exist!\n";
+		screen_color(red);
+		screen_color(black);
+	}
 }
 
 stdata fill_data(string account_number) {
@@ -324,7 +337,7 @@ void printStruct(const stadmins& data)
 
 
 //print data for 1 client only 
-void print_client_details(stdata Client_data) {
+void PrintAdminOrClientDetails(stdata Client_data) {
 	cout << "\nthe following are the account details :\n";
 	cout << "____________________________\n";
 	print_header();
@@ -334,7 +347,7 @@ void print_client_details(stdata Client_data) {
 
 
 //print data for 1 admin only  // for admin only//
-void print_client_details(stadmins admin_data) {
+void PrintAdminOrClientDetails(stadmins admin_data) {
 	cout << "\nthe following are the account details :\n";
 	cout << "____________________________\n";
 	print_header(  1,  false, true); // to print the proper header for admin 
@@ -777,11 +790,6 @@ void add_Admin(vector<stadmins>& all_data_from_file_in_vector) {
 }
 
 
-
-
-
-
-
 // mark the record to be deleted 
 bool mark_for_delete(vector<stdata>& AlldataFromVector, string Client_to_delete) {
 	stdata client;
@@ -799,6 +807,24 @@ bool mark_for_delete(vector<stdata>& AlldataFromVector, string Client_to_delete)
 	cout << "\a";
 	return false;
 }
+
+
+// mark the record to be deleted 
+bool mark_for_delete(vector<stadmins>& AlldataFromVector, string admin_to_delete) {
+	/*stadmins admin;
+	admin.username = admin_to_delete;*/
+	for (stadmins& Vdata : AlldataFromVector)
+	{
+		if (Vdata.username == admin_to_delete) {
+		
+			Vdata.MarkForDelete = true; // edit the original data 
+			return true;
+		}
+	}
+	cout << "\a";
+	return false;
+}
+
 
 // option [3]/////
 void delete_client(vector<stdata>& all_data_from_file_in_vector) {
@@ -819,7 +845,7 @@ void delete_client(vector<stdata>& all_data_from_file_in_vector) {
 		if ((is_account_number_found = check_the_account_number(all_data_from_file_in_vector, account_numberFromUser, Client_data) == true))
 		{
 
-			print_client_details(Client_data); // print client details :)
+			PrintAdminOrClientDetails(Client_data); // print client details :)
 
 			cout << "\ndo you want to remove this client record [y],[n]: ";
 			choice = choice_y_n(); // to input option 
@@ -861,6 +887,70 @@ void delete_client(vector<stdata>& all_data_from_file_in_vector) {
 
 }
 
+////////for admins.................................................................
+void delete_Admin(vector<stadmins>& all_data_from_file_in_vector) {
+
+	print_menu_option("Delete Admin"); // print the menu that indicating i delete client 
+
+	string username = " ";
+	stadmins admins_data;
+	char choice = ' ';
+	bool is_username_exists = false;
+
+
+	do {
+
+		username = read_string("\n\nenter username: "); // read account number from user 
+		if (username == "admin") {
+			cout << "\n\n\a Hi Bitch! you cann't delete yourself from the system dump!\n";
+			return; 
+		}
+
+		if ( is_username_exists = CheckUsernameInVector(all_data_from_file_in_vector, username, admins_data) )
+		{
+
+			PrintAdminOrClientDetails(admins_data); // print client details :)
+
+			cout << "\ndo you want to remove this admins [y],[n]: ";
+			choice = choice_y_n(); // to input option 
+			if (choice == 'Y')
+			{
+
+				if (mark_for_delete(all_data_from_file_in_vector, admins_data.username) == true) {
+
+					vector<string> remaining_admins_after_delete; //(empty string) to save the data again without marked for delete 
+
+					// the logic of delete 
+					remaining_admins_after_delete = New_lines_to_push_in_file_after_delete(all_data_from_file_in_vector, admins_data);
+					edit_Admin_file(remaining_admins_after_delete);//edited file takes only lines of string 
+
+					cout << "\nAdmin data deleted successfully!\n";
+					break; // exit the loop as i deleted 
+				}
+			}
+
+			else {
+				cout << "\nNO changes on Admin's data.\n";
+			}
+		}
+
+
+
+
+		else {
+			the_account_isnot_exist(true);
+		
+
+
+		}
+
+	} while (is_username_exists != true);
+
+
+
+
+}
+
 ////// option[4] //////
 void update_client(vector<stdata>& all_data_from_file_in_vector) {
 
@@ -877,7 +967,7 @@ void update_client(vector<stdata>& all_data_from_file_in_vector) {
 		if ((is_account_number_found = check_the_account_number(all_data_from_file_in_vector, account_numberFromUser, Client_data)) == true)
 		{
 
-			print_client_details(Client_data);
+			PrintAdminOrClientDetails(Client_data);
 
 			cout << "do you want to update this client data [y],[n]: ";
 			choice = choice_y_n();
@@ -887,6 +977,7 @@ void update_client(vector<stdata>& all_data_from_file_in_vector) {
 				cout << "\n\nenter new data to update the current client data:\n";
 
 				Client_data = fill_data(account_numberFromUser); // fill the new data
+
 
 				//update the vector of data (the main logic ) 
 				all_data_from_file_in_vector = update(all_data_from_file_in_vector, Client_data, account_numberFromUser);
@@ -914,6 +1005,65 @@ void update_client(vector<stdata>& all_data_from_file_in_vector) {
 
 }
 
+
+/// for admins only ///////////
+void update_admin(vector<stadmins>& all_data_from_file_in_vector) {
+
+	print_menu_option(" update client");
+
+	string username = " "; // --> account_numberFromUser(perv)
+	stadmins admin_data; // --> Client_data(perv)
+	char choice = ' ';
+	bool IsUsernameExist = false;
+	do {
+		screen_color(black);
+
+		username = read_string("\nenter username to update: ");
+		if ((IsUsernameExist = CheckUsernameInVector(all_data_from_file_in_vector, username, admin_data)) == true)
+		{
+
+			PrintAdminOrClientDetails(admin_data);
+
+			cout << "do you want to update this admin data [y],[n]: ";
+			choice = choice_y_n();
+
+			if (choice == 'Y') { // user want to update
+
+				cout << "\n\nenter new data to update the current admin data:\n";
+
+				admin_data = Fill_Admin_data(username); // fill the new data
+
+
+				GiveAccessToTheNewAdmin(admin_data);// update permissons 
+
+
+				//update the vector of data (the main logic ) 
+				all_data_from_file_in_vector = update(all_data_from_file_in_vector, admin_data, username);
+
+				vector<string>New_lines_to_push_in_file_after_delete; //push old lines with updated line 
+
+				New_lines_to_push_in_file_after_delete = update_before_push_into_file(all_data_from_file_in_vector);
+
+				//update the file 
+				edit_Admin_file(New_lines_to_push_in_file_after_delete);
+
+				cout << "\nthe admin with username \"" << username << "\" his data was updated successfully!\n";
+
+			}
+
+		}
+		else {
+			the_account_isnot_exist(true);
+		}
+
+
+	} while (IsUsernameExist != true);
+
+
+
+}
+
+
 //option[5]
 void find_client(vector<stdata>& all_data_from_file_in_vector) {
 
@@ -928,7 +1078,7 @@ void find_client(vector<stdata>& all_data_from_file_in_vector) {
 		account_numberFromUser = read_string("\nenter account number you want to Find: ");
 		if ((is_account_number_found = check_the_account_number(all_data_from_file_in_vector, account_numberFromUser, Client_data)) == true)
 		{
-			print_client_details(Client_data);
+			PrintAdminOrClientDetails(Client_data);
 
 		}
 		else {
@@ -937,6 +1087,34 @@ void find_client(vector<stdata>& all_data_from_file_in_vector) {
 
 
 	} while (is_account_number_found != true);
+
+
+
+}
+
+// for admins /////////////
+void find_admin(vector<stadmins>& all_data_from_file_in_vector) {
+
+	print_menu_option("Find Admin");
+
+	string username = " ";
+	stadmins admin_data;
+	bool is_username_exist = false;
+	do {
+		screen_color(black);
+
+		username = read_string("\nenter username you want to Find: ");
+		if ((is_username_exist = CheckUsernameInVector(all_data_from_file_in_vector, username, admin_data)) == true)
+		{
+			PrintAdminOrClientDetails(admin_data);
+
+		}
+		else {
+			the_account_isnot_exist(true);
+		}
+
+
+	} while (is_username_exist != true);
 
 
 
@@ -991,7 +1169,7 @@ void Deposit(vector<stdata>& all_data_from_file_in_vector) {
 	stdata Client;
 	Client = start_screen_operation(all_data_from_file_in_vector, account_numberFromUser);
 
-	print_client_details(Client); // print details if account exists 
+	PrintAdminOrClientDetails(Client); // print details if account exists 
 
 	int amount = 0;
 	amount = enter_postive_number("\nenter the amount you want to deposit to this account number: ");
@@ -1020,7 +1198,7 @@ void Withdraw(vector<stdata>& all_data_from_file_in_vector) {
 	stdata Client;
 
 	Client = start_screen_operation(all_data_from_file_in_vector, account_numberFromUser);
-	print_client_details(Client); // print details if account exists 
+	PrintAdminOrClientDetails(Client); // print details if account exists 
 
 	int amount = 0;
 	amount = (enter_postive_number("\nenter the amount you want to withdraw from this account number: ") * -1);
@@ -1249,6 +1427,29 @@ void ImplementOptionInAdminMenu(enadminsStuff option) {
 		system("cls");
 		add_Admin(admins);
 		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
+		break;
+
+	case enadminsStuff::DeleteAdmin:
+		system("cls");
+		delete_Admin(admins);
+		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
+		break;
+
+	case enadminsStuff::UpdateAdmin:
+		system("cls");
+		update_admin(admins);
+		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
+		break;
+
+		
+	case enadminsStuff::FindAdmin:
+		system("cls");
+		find_admin(admins);
+		back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
+		break;
+		
+	default: //enadminsStuff::MainMenu
+	   back_to_menu("press any key to return to manage users screen"); // to back to main menu again 
 		break;
 	}
 }
