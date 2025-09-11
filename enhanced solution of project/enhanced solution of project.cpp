@@ -222,7 +222,7 @@ int ReadPermissionsToSet() {
     char Answer = 'n';
     int per = 0;
 
-
+    //dry 
     cout << "\nDo you want to give full access? y/n? ";
     cin >> Answer;
 
@@ -265,8 +265,42 @@ int ReadPermissionsToSet() {
     }
 
 
+    cout << "\nTransactions? y/n? ";
+    cin >> Answer;
+    if (toupper(Answer) == 'Y') {
+        per += enMainMenuePermissions::pTranactions;
+    }
+
+    cout << "\nManage Users? y/n? ";
+    cin >> Answer;
+    if (toupper(Answer) == 'Y') {
+        per += enMainMenuePermissions::pManageUsers;
+    }
+
+    return per;
+}
+
+stUser ReadNewUser()
+{
+
+    stUser user;
+    cout << "Enter Username? ";
+    getline(cin >> ws, user.UserName);
+    while (UserExistsByUsername(user.UserName, UsersFileName))
+    {
+        cout << "\nUser with [" << user.UserName << "] already exists, Enter another Username? ";
+        getline(cin >> ws, user.UserName);
+    }
+
+    cout << "Enter Password? ";
+    getline(cin, user.Password);
+
+    user.Permissions = ReadPermissionsToSet();
+
+    return user; 
 
 }
+
 
 //vector of structure that have all data from file 
 vector<sClient> LoadCleintsDataFromFile(string FileName) {
