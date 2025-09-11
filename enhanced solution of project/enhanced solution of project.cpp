@@ -327,7 +327,13 @@ vector<sClient> LoadCleintsDataFromFile(string FileName) {
 
     return VectorOFStructure;
 }
+void PrintUserRecordLine(stUser User)
+{
 
+    cout << "| " << setw(15) << left << User.UserName;
+    cout << "| " << setw(10) << left << User.Password;
+    cout << "| " << setw(40) << left << User.Permissions;
+}
 
 vector <stUser> LoadUsersDataFromFile(string FileName) {
     vector <stUser> res;
@@ -357,7 +363,12 @@ void PrintClientRecordLine(sClient client) {
     cout << "|" << setw(12) << left << client.Phone;
     cout << "|" << setw(12) << left << client.AccountBalance;
 }
-
+void ShowAccessDeniedMessage()
+{
+    cout << "\n------------------------------------\n";
+    cout << "Access Denied, \nYou dont Have Permission To Do this,\nPlease Conact Your Admin.";
+    cout << "\n------------------------------------\n";
+}
 //option 1 
 void ShowAllClientsScreen() {
     if (!CheckAccessPermission(pListClients)) {
@@ -410,9 +421,13 @@ void ShowAllUsersScreen() {
     cout << "\n_______________________________________________________";
     cout << "_________________________________________\n" << endl;
 
-    if (vusers.size() == 0)
-        cout << "\t\t\t\tNo Users Available In the System!";
+    if (vusers.size() == 0)  cout << "\t\t\t\tNo Users Available In the System!";
+    
+    
+
     else
+      
+   
 
         for (stUser User : vusers)
         {
@@ -445,13 +460,7 @@ void PrintClientCard(sClient client) {
     cout << "\nAccount Balance: " << client.AccountBalance;
     cout << "\n-----------------------------------\n";
 }
-void PrintUserRecordLine(stUser User)
-{
 
-    cout << "| " << setw(15) << left << User.UserName;
-    cout << "| " << setw(10) << left << User.Password;
-    cout << "| " << setw(40) << left << User.Permissions;
-}
 void PrintClientRecordBalanceLine(sClient Client)
 {
 
@@ -460,12 +469,7 @@ void PrintClientRecordBalanceLine(sClient Client)
     cout << "| " << setw(12) << left << Client.AccountBalance;
 
 }
-void ShowAccessDeniedMessage()
-{
-    cout << "\n------------------------------------\n";
-    cout << "Access Denied, \nYou dont Have Permission To Do this,\nPlease Conact Your Admin.";
-    cout << "\n------------------------------------\n";
-}
+
 bool FindClientByAccountNumber(string AccountNumber, vector<sClient> Vclients, sClient& client) {
 
     for (sClient& foundClient : Vclients) {
@@ -937,13 +941,13 @@ void GoBackToMainMenue()
     system("pause>0");
     ShowMainMenue();
 }
-void GoBackToTransactionsMenue()
-{
-    cout << "\n\nPress any key to go back to Transactions Menue...";
-    system("pause>0");
-    ShowTransactionsMenue();
-
-}
+//void GoBackToTransactionsMenue()
+//{
+//    cout << "\n\nPress any key to go back to Transactions Menue...";
+//    system("pause>0");
+//    ShowTransactionsMenue();
+//
+//}
 short ReadMainMenueOption()
 {
     cout << "Choose what do you want to do? [1 to 7]? ";
@@ -1008,12 +1012,12 @@ void ShowDepositScreen() {
 
 }
 
-void PrintClientRecordBalanceLine(sClient Client) {
-
-    cout << "| " << setw(15) << left << Client.AccountNumber;
-    cout << "| " << setw(40) << left << Client.Name;
-    cout << "| " << setw(12) << left << Client.AccountBalance;
-}
+//void PrintClientRecordBalanceLine(sClient Client) {
+//
+//    cout << "| " << setw(15) << left << Client.AccountNumber;
+//    cout << "| " << setw(40) << left << Client.Name;
+//    cout << "| " << setw(12) << left << Client.AccountBalance;
+//}
 
 void ShowListUsersScreen()
 {
