@@ -323,6 +323,26 @@ vector<sClient> LoadCleintsDataFromFile(string FileName) {
     return VectorOFStructure;
 }
 
+
+vector <stUser> LoadUsersDataFromFile(string FileName) {
+    vector <stUser> res;
+    fstream read;
+        read.open(FileName, ios::in);
+        if (read.is_open()) {
+            stUser user;
+            string line;
+
+            while (getline(read, line)) {
+                user = ConvertUserLinetoRecord(line);
+                res.push_back(user);
+            }
+
+            read.close();
+        }
+
+        return res;
+}
+
 // will use it in show all client menu 
 void PrintClientRecordLine(sClient client) {
     // print Client  data 
