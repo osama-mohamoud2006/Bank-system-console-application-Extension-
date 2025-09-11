@@ -1333,14 +1333,17 @@ void Login()
         cout << "Enter Password? ";
         cin >> Password;
 
-    }
 
+        LoginFaild = !LoadUserInfo(Username, Password);
+    } while (LoginFaild);
+
+    ShowMainMenue();
 }
 
 int main()
 
 {
-    ShowMainMenue();
+    Login();
     system("pause>0");
     return 0;
 }

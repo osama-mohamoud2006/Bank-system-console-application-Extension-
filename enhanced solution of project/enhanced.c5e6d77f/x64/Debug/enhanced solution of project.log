@@ -1,5 +1,1 @@
-﻿  enhanced solution of project.cpp
-E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\enhanced solution of project\enhanced solution of project.cpp(38,26): warning C4267: '=': conversion from 'size_t' to 'short', possible loss of data
-E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\enhanced solution of project\enhanced solution of project.cpp(340,1): warning C4715: 'DeleteClientByAccountNumber': not all control paths return a value
-E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\enhanced solution of project\enhanced solution of project.cpp(372,1): warning C4715: 'UpdateClientByAccountNumber': not all control paths return a value
-  enhanced solution of project.vcxproj -> E:\projects\c++ course\08 - Algorithms & Problem Solving Level 4\Project 1\enhanced solution of project\x64\Debug\enhanced solution of project.exe
+﻿
