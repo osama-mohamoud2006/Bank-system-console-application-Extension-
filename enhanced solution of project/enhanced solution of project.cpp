@@ -134,7 +134,12 @@ stUser ConvertUserLinetoRecord2(string Line, string Seperator = "#//#")
 
 }
 
+bool CheckAccessPermission(enMainMenuePermissions Permission) {
+    if (CurrentUser.Permissions == enMainMenuePermissions::eAll) return true;
 
+    if ((CurrentUser.Permissions & Permission) == Permission) return true;
+    else return false; 
+}
 
 bool ClientExistsByAccountNumber(string AccountNumber, string FileName) {
 
@@ -355,6 +360,11 @@ void PrintClientRecordLine(sClient client) {
 
 //option 1 
 void ShowAllClientsScreen() {
+    if (!CheckAccessPermission(pListClients)) {
+        ShowAccessDeniedMessage();
+        return;
+    }
+
     vector<sClient> Vclient = LoadCleintsDataFromFile(ClientsFileName);
     cout << "\n\t\t\t\t\tClient List (" << Vclient.size() << ") Client(s).";
     cout << "\n_______________________________________________________";
@@ -388,6 +398,43 @@ void ShowAllClientsScreen() {
 
 }
 
+void ShowAllUsersScreen() {
+    vector<stUser>vusers = LoadUsersDataFromFile(UsersFileName);
+    cout << "\n\t\t\t\t\tUsers List (" << vusers.size() << ") User(s).";
+    cout << "\n_______________________________________________________";
+    cout << "_________________________________________\n" << endl;
+
+    cout << "| " << left << setw(15) << "User Name";
+    cout << "| " << left << setw(10) << "Password";
+    cout << "| " << left << setw(40) << "Permissions";
+    cout << "\n_______________________________________________________";
+    cout << "_________________________________________\n" << endl;
+
+    if (vusers.size() == 0)
+        cout << "\t\t\t\tNo Users Available In the System!";
+    else
+
+        for (stUser User : vusers)
+        {
+
+            PrintUserRecordLine(User);
+            cout << endl;
+        }
+
+    cout << "\n_______________________________________________________";
+    cout << "_________________________________________\n" << endl;
+}
+
+void PrintUserCard(stUser User)
+{
+    cout << "\nThe following are the user details:\n";
+    cout << "-----------------------------------";
+    cout << "\nUsername    : " << User.UserName;
+    cout << "\nPassword    : " << User.Password;
+    cout << "\nPermissions : " << User.Permissions;
+    cout << "\n-----------------------------------\n";
+
+}
 void PrintClientCard(sClient client) {
     cout << "\nThe following are the client details:\n";
     cout << "-----------------------------------";
@@ -398,7 +445,27 @@ void PrintClientCard(sClient client) {
     cout << "\nAccount Balance: " << client.AccountBalance;
     cout << "\n-----------------------------------\n";
 }
+void PrintUserRecordLine(stUser User)
+{
 
+    cout << "| " << setw(15) << left << User.UserName;
+    cout << "| " << setw(10) << left << User.Password;
+    cout << "| " << setw(40) << left << User.Permissions;
+}
+void PrintClientRecordBalanceLine(sClient Client)
+{
+
+    cout << "| " << setw(15) << left << Client.AccountNumber;
+    cout << "| " << setw(40) << left << Client.Name;
+    cout << "| " << setw(12) << left << Client.AccountBalance;
+
+}
+void ShowAccessDeniedMessage()
+{
+    cout << "\n------------------------------------\n";
+    cout << "Access Denied, \nYou dont Have Permission To Do this,\nPlease Conact Your Admin.";
+    cout << "\n------------------------------------\n";
+}
 bool FindClientByAccountNumber(string AccountNumber, vector<sClient> Vclients, sClient& client) {
 
     for (sClient& foundClient : Vclients) {
@@ -411,6 +478,40 @@ bool FindClientByAccountNumber(string AccountNumber, vector<sClient> Vclients, s
     }
 
     return false;
+}
+
+bool FindUserByUsername(string Username, vector <stUser> vUsers, stUser& User)
+{
+    for (stUser U : vUsers)
+    {
+
+        if (U.UserName == Username)
+        {
+            User = U;
+            return true;
+        }
+
+    }
+    return false;
+}
+
+bool FindUserByUsernameAndPassword(string Username, string Password, stUser& User)
+{
+
+    vector <stUser> vUsers = LoadUsersDataFromFile(UsersFileName);
+
+    for (stUser U : vUsers)
+    {
+
+        if (U.UserName == Username && U.Password == Password)
+        {
+            User = U;
+            return true;
+        }
+
+    }
+    return false;
+
 }
 
 // fill to update data 
@@ -435,6 +536,20 @@ sClient ChangeClientRecord(string AccountNumber) {
 
 }
 
+stUser  ChangeUserRecord(string Username) {
+
+    stUser user;
+    user.UserName = Username;
+
+    cout << "\n\nEnter Password? ";
+    gerline(cin >> ws, user.Password);
+    
+    user.Permissions = ReadPermissionsToSet();
+    return user;
+}
+
+
+
 // the main logic of delete client
 bool MarkClientForDeleteByAccountNumber(string AccountNumber, vector<sClient>& Vclient) {
 
@@ -446,6 +561,52 @@ bool MarkClientForDeleteByAccountNumber(string AccountNumber, vector<sClient>& V
     }
 
     return false;
+}
+
+bool MarkUserForDeleteByUsername(string Username, vector <stUser>& vUsers) {
+
+    for (stUser& U : vUsers)
+    {
+        if (U.UserName == Username)
+        {
+            U.MarkForDelete = true;
+            return true;
+        }
+    }
+    return false;
+
+}
+
+vector <stUser> SaveUsersDataToFile(string FileName, vector <stUser> vUsers)
+{
+
+    fstream MyFile;
+    MyFile.open(FileName, ios::out);//overwrite
+
+    string DataLine;
+
+    if (MyFile.is_open())
+    {
+
+        for (stUser U : vUsers)
+        {
+
+            if (U.MarkForDelete == false)
+            {
+                //we only write records that are not marked for delete.  
+                DataLine = ConvertUserRecordToLine(U);
+                MyFile << DataLine << endl;
+
+            }
+
+        }
+
+        MyFile.close();
+
+    }
+
+    return vUsers;
+
 }
 
 vector<sClient> SaveCleintsDataToFile(string FileName, vector<sClient> Vclients) {
