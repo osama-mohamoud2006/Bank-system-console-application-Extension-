@@ -669,7 +669,17 @@ void AddNewClients() {
     } while (toupper(AddMore) == 'Y');
 }
 
+void AddNewUsers() {
+    char AddMore = 'Y';
+    do {
+        cout << "Adding New User:\n\n";
+        AddNewUser();
+        cout << "\nUser Added Successfully, do you want to add more Users? Y/N? ";
 
+        cin >> AddMore;
+
+    } while (toupper(AddMore) == 'Y');
+}
 
 bool DeleteClientByAccountNumber(string AccountNumber, vector<sClient>& Vclients) {
 
@@ -697,6 +707,34 @@ bool DeleteClientByAccountNumber(string AccountNumber, vector<sClient>& Vclients
     }
 
 }
+
+bool DeleteUserByUsername(string Username, vector <stUser>& vUsers) {
+    if (Username == "admin") {
+        cout << "\n\nYou cannot Delete This User.";
+        return false;
+    }
+
+    stUser User;
+    char Answer = 'n';
+
+    if (FindUserByUsername(Username, vUsers, User)) {
+        cout << "\n\nAre you sure you want delete this User? y/n ? ";
+        cin >> Answer;
+        if (Answer == 'y' || Answer == 'Y') {
+            MarkUserForDeleteByUsername(Username, vUsers);
+            SaveUsersDataToFile(UsersFileName, vUsers);
+            vUsers = LoadUsersDataFromFile(UsersFileName);
+            cout << "\n\nUser Deleted Successfully.";
+            return true;
+        }
+        else
+        {
+            cout << "\nUser with Username (" << Username << ") is Not Found!";
+            return false;
+        }
+    }
+}
+
 
 bool UpdateClientByAccountNumber(string AccountNumber, vector<sClient>& vClients) {
 
@@ -727,6 +765,21 @@ bool UpdateClientByAccountNumber(string AccountNumber, vector<sClient>& vClients
     else {
         cout << "\nClient with Account Number (" << AccountNumber << ") is Not Found!";
         return false;
+    }
+}
+
+
+bool UpdateUserByUsername(string Username, vector <stUser>& vUsers) {
+    stUser User;
+    char Answer = 'n';
+
+    if (FindUserByUsername(Username, vUsers, User)) {
+        PrintUserCard(User);
+        cout << "\n\nAre you sure you want update this User? y/n ? ";
+        cin >> Answer;
+        if (Answer == 'y' || Answer == 'Y') {
+
+        }
     }
 }
 
