@@ -5,7 +5,7 @@
 #include <iomanip>
 using namespace std;
 const string ClientsFileName = "local db.text";
-const string UsersFileName = "Users.txt";
+const string UsersFileName = "Users.text";
 
 void ShowMainMenue();
 void ShowTransactionsMenue();
