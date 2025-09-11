@@ -163,8 +163,26 @@ bool ClientExistsByAccountNumber(string AccountNumber, string FileName) {
 }
 
 
-bool UserExistsByUsername() {
+bool UserExistsByUsername(string Username, string FileName) {
+    //read file and convert each line into record 
+    stUser user;
+    fstream read;
+    read.open(FileName, ios::in); // read 
+    if (read.is_open()) {
 
+        string line;
+        while (getline(read, line)) {
+
+            user = ConvertUserLinetoRecord(line);
+            if (user.UserName == Username) {
+                read.close();
+                return true;
+            }
+        }
+
+        read.close();
+    }
+    return false;
 }
 
 
@@ -196,6 +214,57 @@ sClient ReadNewClient() {
     cin >> data.AccountBalance;
 
     return data;
+
+}
+
+int ReadPermissionsToSet() {
+
+    char Answer = 'n';
+    int per = 0;
+
+
+    cout << "\nDo you want to give full access? y/n? ";
+    cin >> Answer;
+
+    if (toupper(Answer) == 'Y') {
+        return -1;
+    }
+
+    cout << "\nDo you want to give access to : \n ";
+
+    cout << "\nShow Client List? y/n? ";
+    cin >> Answer;
+
+    if (toupper(Answer) == 'Y') {
+        per += enMainMenuePermissions::pListClients;
+    }
+
+    cout << "\nAdd New Client? y/n? ";
+    cin >> Answer;
+    if (toupper(Answer) == 'Y') {
+        per += enMainMenuePermissions::pAddNewClient;
+    }
+
+    cout << "\nDelete Client? y/n? ";
+    cin >> Answer;
+    if (toupper(Answer) == 'Y') {
+        per += enMainMenuePermissions::pDeleteClient;
+    }
+
+
+    cout << "\nUpdate Client? y/n? ";
+    cin >> Answer;
+    if (toupper(Answer) == 'Y') {
+        per += enMainMenuePermissions::pUpdateClients;
+    }
+
+    cout << "\nFind Client? y/n? ";
+    cin >> Answer;
+    if (toupper(Answer) == 'Y') {
+        per += enMainMenuePermissions::pFindClient;
+    }
+
+
 
 }
 

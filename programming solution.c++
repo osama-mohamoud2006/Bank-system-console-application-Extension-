@@ -272,7 +272,7 @@ sClient ReadNewClient()
 
 int ReadPermissionsToSet()
 {
-
+//dry
     int Permissions = 0;
     char Answer = 'n';
 
@@ -324,7 +324,7 @@ int ReadPermissionsToSet()
         Permissions += enMainMenuePermissions::pFindClient;
     }
 
-    cout << "\nTransactions? y/n? ";
+    cout << "\nTransactions? y/n? "; 
     cin >> Answer;
     if (Answer == 'y' || Answer == 'Y')
     {
