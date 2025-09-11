@@ -1,11 +1,13 @@
 // please if you want to understand read Admin.per in output  and use this number and use win 
 // calculator in programmer mode to understand how it works
-// for Ex : Admin.per = 6 , (6&1)==0 (1 is printname in enum ) (does't have printname per) 
+// for Ex : Admin.per = 6  
+//(6&1)==0 (1 is printname in enum ) (does't have printname per) 
 //(6&2)==2 (have hiname per) ,
 //(6&4)==4 (have fuckname per)
 // so the output will be : 
 // does't have permission to print his name
 // hi name
+// fuck name
 
 #include <iostream>
 using namespace std;

@@ -723,7 +723,6 @@ void GiveAccessToTheNewAdmin(stadmins& admins_data) {
 
 	if (GiveTheAdminFullAccess(admins_data))
 	{
-
 		cout << "\n\nThe Admin \"" << admins_data.username << "\" have the full access on the system!\n\n";
 	}
 
