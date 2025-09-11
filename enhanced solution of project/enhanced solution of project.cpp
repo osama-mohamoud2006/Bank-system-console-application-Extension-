@@ -542,7 +542,7 @@ stUser  ChangeUserRecord(string Username) {
     user.UserName = Username;
 
     cout << "\n\nEnter Password? ";
-    gerline(cin >> ws, user.Password);
+    getline(cin >> ws, user.Password);
     
     user.Permissions = ReadPermissionsToSet();
     return user;
@@ -647,6 +647,13 @@ void AddNewClient() {
     AddDataLineToFile(ClientsFileName, ConvertRecordToLine(client));
 }
 
+void AddNewUser() {
+    stUser User;
+    User = ReadNewUser();
+    AddDataLineToFile(UsersFileName, ConvertUserRecordToLine(User));
+}
+
+
 void AddNewClients() {
 
     char AddMore = 'Y';
@@ -661,6 +668,8 @@ void AddNewClients() {
 
     } while (toupper(AddMore) == 'Y');
 }
+
+
 
 bool DeleteClientByAccountNumber(string AccountNumber, vector<sClient>& Vclients) {
 
